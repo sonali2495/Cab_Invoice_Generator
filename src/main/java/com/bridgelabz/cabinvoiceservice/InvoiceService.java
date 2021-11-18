@@ -1,25 +1,19 @@
 package com.bridgelabz.cabinvoiceservice;
 
 public class InvoiceService {
-    private static final double MINIMUM_COST_PER_KILOMETER = 10.0;
-    private static final int COST_PER_TIME = 1;
-    private static final double MINIMUM_FARE = 5;
-    private static RideRepository rideRepository;
-
-    public InvoiceService() {
-        rideRepository = new RideRepository();
-    }
+    private static RideRepository rideRepository = new RideRepository();
 
     /**
      * Purpose : To Calculate Fare
-     *
+     * @param category : Ride Type
      * @param distance
      * @param time
      * @return  Total Fare
      */
-    public double calculateFare(double distance, int time) {
-        double totalFare = distance * MINIMUM_COST_PER_KILOMETER + time * COST_PER_TIME;
-        return Math.max(totalFare, MINIMUM_FARE);
+    public static double calculateFare(RideCategories category, double distance, int time) {
+        if (category == RideCategories.NORMAL_RIDES)
+            return RideCategories.NORMAL_RIDES.calculateFare(distance, time);
+        return RideCategories.PREMIUM_RIDES.calculateFare(distance, time);
     }
 
     /**
@@ -28,11 +22,14 @@ public class InvoiceService {
      * @param rides
      * @return Total Fare
      */
-    public double calculateFare(Ride[] rides) {
+    public double calculateFare(RideCategories category, Ride[] rides) {
         double totalFare = 0;
-        for (Ride ride : rides) {
-            totalFare += this.calculateFare(ride.distance, ride.time);
-        }
+        if (category == RideCategories.NORMAL_RIDES) {
+            for (Ride ride : rides)
+                totalFare += RideCategories.NORMAL_RIDES.calculateFare(ride.distance, ride.time);
+        } else
+            for (Ride ride : rides)
+                totalFare += RideCategories.PREMIUM_RIDES.calculateFare(ride.distance, ride.time);
         return totalFare;
     }
 
@@ -42,12 +39,19 @@ public class InvoiceService {
      * @param rides
      * @return Total Fare With Summary
      */
-    public InvoiceSummary calculateFareSummary(Ride[] rides) {
+    public InvoiceSummary calculateFareSummary(RideCategories category, Ride[] rides) {
         double totalFare = 0;
-        for (Ride ride : rides) {
-            totalFare += this.calculateFare(ride.distance, ride.time);
+        if (category == RideCategories.NORMAL_RIDES) {
+            for (Ride ride : rides) {
+                totalFare += RideCategories.NORMAL_RIDES.calculateFare(ride.distance, ride.time);
+            }
+            return new InvoiceSummary(rides.length, totalFare);
+        } else {
+            for (Ride ride : rides) {
+                totalFare += RideCategories.PREMIUM_RIDES.calculateFare(ride.distance, ride.time);
+            }
+            return new InvoiceSummary(rides.length, totalFare);
         }
-        return new InvoiceSummary(rides.length, totalFare);
     }
 
     /**
@@ -56,8 +60,11 @@ public class InvoiceService {
      * @param userId
      * @return Calculate Fare Summary
      */
-    public InvoiceSummary getInvoiceSummary(String userId) {
-        return this.calculateFareSummary(rideRepository.getRides(userId));
+    public InvoiceSummary getInvoiceSummary(RideCategories category, String userId) {
+        if (category == RideCategories.NORMAL_RIDES)
+            return this.calculateFareSummary(RideCategories.NORMAL_RIDES, rideRepository.getRides(userId));
+        return this.calculateFareSummary(RideCategories.PREMIUM_RIDES, rideRepository.getRides(userId));
+
     }
 
     /**
