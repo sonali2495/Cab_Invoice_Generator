@@ -1,4 +1,4 @@
-package com.bridgelabz.cabinvoicegenerator;
+package com.bridgelabz.cabinvoiceservice;
 
 public class Ride {
     public final int time;
