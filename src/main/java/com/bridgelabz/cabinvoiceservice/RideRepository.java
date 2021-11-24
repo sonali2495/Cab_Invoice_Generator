@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Purpose : To generate enhanced invoice summary based on userID
+ */
 public class RideRepository {
     Map<String, ArrayList<Ride>> userRides;
 

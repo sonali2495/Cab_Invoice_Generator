@@ -12,7 +12,7 @@ public class InvoiceServiceTest {
     private RideRepository rideRepository = null;
 
     @BeforeEach
-    void setUp() throws Exception{
+    void setUp() throws Exception {
         invoiceService = new InvoiceService();
         rideRepository = new RideRepository();
         invoiceService.setRideRepository(rideRepository);
@@ -33,8 +33,6 @@ public class InvoiceServiceTest {
         InvoiceSummary invoiceSummary = invoiceService.getInvoiceSummary("abc101");
         assertEquals(invoiceSummary, expectedInvoiceSummary);
     }
-
-
 
 
 }

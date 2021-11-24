@@ -1,5 +1,8 @@
 package com.bridgelabz.cabinvoiceservice;
 
+/**
+ * Purpose : To generate multiple rides
+ */
 public class Ride {
     public final int time;
     public final double distance;

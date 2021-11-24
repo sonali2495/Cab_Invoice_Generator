@@ -1,5 +1,8 @@
 package com.bridgelabz.cabinvoiceservice;
 
+/**
+ * Purpose : To generate the enhanced invoice summary of Rides
+ */
 public class InvoiceSummary {
     private final int numOfRides;
     private final double totalFare;
